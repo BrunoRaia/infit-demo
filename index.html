@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IN FIT · Demo Sistema de Turnos</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.34.1/tabler-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --fluor: #C8FF00; --fluor-dim: #a8d800; --fluor-bg: rgba(200,255,0,0.07); --fluor-bg-s: rgba(200,255,0,0.13);
+  --bg: #0a0a0a; --card: #111111; --card2: #161616; --border: rgba(255,255,255,0.07); --border-fluor: rgba(200,255,0,0.3);
+  --txt: #f0f0f0; --txt2: #666; --txt3: #3a3a3a; --warn: #ef9f27; --radius: 10px;
+}
+body { background: #050505; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: var(--txt); display: flex; justify-content: center; padding: 24px 16px; min-height: 100vh; }
+.wrap { width: 100%; max-width: 720px; }
+.main-nav { display: flex; gap: 6px; margin-bottom: 16px; background: #0d0d0d; border: 0.5px solid #1a1a1a; border-radius: 12px; padding: 6px; }
+.main-nav-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--txt2); border: none; background: transparent; transition: all 0.15s; font-family: inherit; }
+.main-nav-btn i { font-size: 16px; }
+.main-nav-btn.active { background: var(--fluor); color: #0a0a0a; }
+.main-nav-btn:not(.active):hover { background: #161616; color: #aaa; }
+.shell { background: var(--bg); border-radius: 14px; border: 0.5px solid #1e1e1e; overflow: hidden; position: relative; }
+.topbar { background: #0d0d0d; border-bottom: 0.5px solid #1a1a1a; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; }
+.brand-logo { font-size: 17px; font-weight: 500; letter-spacing: -0.02em; }
+.brand-in { color: var(--fluor); } .brand-fit { color: #fff; }
+.brand-bolt { font-size: 14px; color: var(--fluor); margin: 0 1px; }
+.brand-tagline { font-size: 10px; color: var(--txt2); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 1px; }
+.user-chip { display: flex; align-items: center; gap: 7px; background: #161616; border: 0.5px solid #222; border-radius: 20px; padding: 4px 10px 4px 5px; }
+.user-av { width: 24px; height: 24px; border-radius: 50%; background: var(--fluor-bg-s); border: 1px solid var(--border-fluor); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; color: var(--fluor); }
+.user-name { font-size: 12px; color: #aaa; }
+.owner-chip { background: var(--fluor-bg-s); border-color: var(--border-fluor); }
+.owner-chip .user-av { background: var(--fluor); border: none; color: #0a0a0a; }
+.owner-chip .user-name { color: var(--fluor); }
+.owner-role { font-size: 9px; color: var(--fluor-dim); }
+.view { display: none; }
+.view.active { display: block; }
+.day-strip { display: flex; gap: 6px; padding: 16px 18px 0; overflow-x: auto; }
+.day-btn { display: flex; flex-direction: column; align-items: center; padding: 8px 12px; border-radius: 8px; border: 0.5px solid #1e1e1e; background: var(--card); cursor: pointer; min-width: 48px; transition: all 0.12s; }
+.day-btn.sel { background: var(--fluor-bg-s); border-color: var(--border-fluor); }
+.day-d { font-size: 10px; color: var(--txt2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+.day-n { font-size: 16px; font-weight: 500; color: #777; }
+.day-btn.sel .day-d { color: var(--fluor-dim); }
+.day-btn.sel .day-n { color: var(--fluor); }
+.section-eyebrow { padding: 14px 18px 10px; font-size: 10px; font-weight: 500; color: var(--txt3); text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 8px; }
+.eyebrow-line { flex: 1; height: 0.5px; background: #1e1e1e; }
+.class-list { padding: 0 18px 18px; display: flex; flex-direction: column; gap: 8px; min-height: 80px; }
+.class-row { background: var(--card); border: 0.5px solid #1e1e1e; border-radius: var(--radius); padding: 12px 14px; display: flex; align-items: center; gap: 12px; transition: border-color 0.12s; position: relative; overflow: hidden; }
+.class-row::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: transparent; transition: background 0.12s; }
+.class-row:hover { border-color: #2a2a2a; }
+.class-row.featured::before { background: var(--fluor); }
+.class-row.featured { border-color: rgba(200,255,0,0.15); }
+.time-col { min-width: 42px; text-align: center; }
+.t-hour { font-size: 14px; font-weight: 500; color: var(--txt); }
+.t-ampm { font-size: 10px; color: var(--txt2); }
+.sep { width: 0.5px; height: 32px; background: #1e1e1e; flex-shrink: 0; }
+.class-body { flex: 1; min-width: 0; }
+.c-name { font-size: 13px; font-weight: 500; color: var(--txt); margin-bottom: 4px; }
+.c-meta { display: flex; gap: 10px; align-items: center; font-size: 11px; color: var(--txt2); flex-wrap: wrap; }
+.c-meta i { font-size: 12px; vertical-align: -1px; margin-right: 2px; }
+.tag { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
+.tag-free { background: var(--fluor-bg-s); color: var(--fluor); border: 0.5px solid var(--border-fluor); }
+.tag-low { background: rgba(239,159,39,0.12); color: var(--warn); border: 0.5px solid rgba(239,159,39,0.25); }
+.tag-full { background: rgba(255,255,255,0.04); color: #444; border: 0.5px solid #222; }
+.btn-join { padding: 6px 14px; border-radius: 7px; border: 0.5px solid var(--fluor); background: transparent; color: var(--fluor); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.12s; flex-shrink: 0; font-family: inherit; }
+.btn-join:hover:not(:disabled) { background: var(--fluor); color: #0a0a0a; }
+.btn-join:disabled { cursor: default; }
+.btn-join.joined { background: var(--fluor-bg-s); color: var(--fluor); border-color: var(--border-fluor); }
+.btn-join.joined:hover { background: var(--fluor); color: #0a0a0a; }
+.btn-join.full { border-color: #222; color: #333; }
+.featured-badge { position: absolute; top: 8px; right: 8px; font-size: 9px; font-weight: 500; background: var(--fluor); color: #0a0a0a; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.06em; text-transform: uppercase; }
+.empty-day { text-align: center; color: var(--txt2); font-size: 13px; padding: 32px 18px; }
+.empty-day i { font-size: 28px; color: #2a2a2a; display: block; margin-bottom: 10px; }
+.prof-top { background: #0d0d0d; border-bottom: 0.5px solid #1a1a1a; padding: 14px 18px; display: flex; align-items: center; gap: 12px; }
+.prof-av { width: 42px; height: 42px; border-radius: 50%; background: var(--fluor-bg-s); border: 1px solid var(--border-fluor); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: var(--fluor); }
+.prof-info-name { font-size: 14px; font-weight: 500; color: #fff; }
+.prof-info-class { font-size: 11px; color: var(--txt2); margin-top: 2px; }
+.prof-info-class i { font-size: 12px; vertical-align: -1px; }
+.stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 14px 18px; border-bottom: 0.5px solid #1a1a1a; }
+.stat { background: var(--card); border: 0.5px solid #1e1e1e; border-radius: 8px; padding: 10px; text-align: center; }
+.stat-n { font-size: 22px; font-weight: 500; }
+.stat-l { font-size: 10px; color: var(--txt2); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
+.stat.s-total .stat-n { color: #fff; }
+.stat.s-pres .stat-n { color: var(--fluor); }
+.stat.s-ause .stat-n { color: var(--warn); }
+.progress-bar-wrap { padding: 14px 18px; border-bottom: 0.5px solid #1a1a1a; }
+.pb-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--txt2); margin-bottom: 6px; }
+.pb-track { height: 4px; background: #1e1e1e; border-radius: 2px; overflow: hidden; }
+.pb-fill { height: 100%; background: var(--fluor); border-radius: 2px; transition: width 0.4s ease; }
+.list-head { padding: 12px 18px 6px; display: flex; justify-content: space-between; align-items: center; }
+.list-label { font-size: 10px; color: var(--txt3); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; }
+.list-hint { font-size: 10px; color: var(--txt2); display: flex; align-items: center; gap: 4px; }
+.list-hint i { font-size: 12px; }
+.students { padding: 0 18px 18px; display: flex; flex-direction: column; gap: 2px; }
+.stu { display: flex; align-items: center; gap: 10px; padding: 9px 4px; border-bottom: 0.5px solid #141414; cursor: pointer; border-radius: 6px; transition: background 0.12s; }
+.stu:last-child { border-bottom: none; }
+.stu:hover { background: #131313; }
+.stu:active { transform: scale(0.99); }
+.stu-av { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; transition: all 0.15s; }
+.stu-info { flex: 1; }
+.stu-name { font-size: 13px; color: #ccc; }
+.stu-status { display: flex; align-items: center; gap: 5px; font-size: 11px; padding: 4px 10px; border-radius: 20px; transition: all 0.15s; }
+.stu-status.present { color: var(--fluor); background: var(--fluor-bg-s); }
+.stu-status.absent { color: var(--warn); background: rgba(239,159,39,0.1); }
+.stu-status i { font-size: 13px; }
+.dash { padding: 16px 18px; }
+.dash-title { font-size: 11px; color: var(--txt3); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.period { font-size: 10px; color: var(--txt2); background: #161616; border: 0.5px solid #222; padding: 3px 10px; border-radius: 20px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 18px; }
+.kpi { background: var(--card); border: 0.5px solid #1e1e1e; border-radius: var(--radius); padding: 14px; position: relative; overflow: hidden; }
+.kpi::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--fluor); }
+.kpi.neutral::before { background: #333; }
+.kpi-label { font-size: 11px; color: var(--txt2); display: flex; align-items: center; gap: 6px; }
+.kpi-label i { font-size: 13px; }
+.kpi-value { font-size: 24px; font-weight: 500; margin-top: 6px; color: #fff; }
+.kpi-sub { font-size: 11px; margin-top: 4px; }
+.up { color: var(--fluor); }
+.section-lbl { font-size: 11px; color: var(--txt3); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; margin: 4px 0 12px; display: flex; align-items: center; gap: 8px; }
+.lbl-line { flex: 1; height: 0.5px; background: #1e1e1e; }
+.chart-card { background: var(--card); border: 0.5px solid #1e1e1e; border-radius: var(--radius); padding: 14px 16px; margin-bottom: 18px; }
+.chart-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+.chart-title { font-size: 13px; color: #ccc; font-weight: 500; }
+.chart-total { font-size: 11px; color: var(--txt2); }
+.bars { display: flex; align-items: flex-end; gap: 8px; height: 100px; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.bar { width: 100%; background: var(--fluor-bg-s); border: 0.5px solid rgba(200,255,0,0.2); border-radius: 4px 4px 0 0; min-height: 4px; }
+.bar.peak { background: var(--fluor); border-color: var(--fluor); }
+.bar-label { font-size: 10px; color: var(--txt2); }
+.classes-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mini-card { background: var(--card); border: 0.5px solid #1e1e1e; border-radius: var(--radius); padding: 12px 14px; }
+.mini-title { font-size: 11px; color: var(--txt2); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+.occ-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.occ-item:last-child { margin-bottom: 0; }
+.occ-name { font-size: 12px; color: #bbb; min-width: 70px; }
+.occ-track { flex: 1; height: 5px; background: #1e1e1e; border-radius: 3px; overflow: hidden; }
+.occ-fill { height: 100%; background: var(--fluor); border-radius: 3px; }
+.occ-fill.med { background: var(--warn); }
+.occ-pct { font-size: 11px; color: var(--txt2); min-width: 32px; text-align: right; }
+.alert-item { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 0.5px solid #161616; }
+.alert-item:last-child { border-bottom: none; }
+.alert-icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.ai-warn { background: rgba(239,159,39,0.12); color: var(--warn); }
+.ai-ok { background: var(--fluor-bg-s); color: var(--fluor); }
+.alert-txt { font-size: 12px; color: #bbb; flex: 1; }
+.alert-val { font-size: 12px; font-weight: 500; }
+.down { color: var(--warn); }
+.modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 50; }
+.modal-overlay.show { display: flex; }
+.modal { background: #131313; border: 0.5px solid #2a2a2a; border-radius: 14px; padding: 24px; max-width: 320px; width: 100%; text-align: center; animation: pop 0.18s ease; }
+@keyframes pop { from { transform: scale(0.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-icon { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 14px; }
+.modal-icon.ok { background: var(--fluor-bg-s); color: var(--fluor); }
+.modal-icon.cancel { background: rgba(239,159,39,0.12); color: var(--warn); }
+.modal-title { font-size: 16px; font-weight: 500; color: #fff; margin-bottom: 6px; }
+.modal-text { font-size: 13px; color: var(--txt2); margin-bottom: 8px; line-height: 1.5; }
+.modal-class { font-size: 13px; color: var(--fluor); font-weight: 500; margin-bottom: 18px; }
+.modal-class.cancel-c { color: var(--warn); }
+.modal-btns { display: flex; gap: 8px; }
+.modal-btn { flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: 0.5px solid #2a2a2a; background: transparent; color: #aaa; font-family: inherit; transition: all 0.12s; }
+.modal-btn:hover { background: #1a1a1a; }
+.modal-btn.primary { background: var(--fluor); color: #0a0a0a; border-color: var(--fluor); }
+.modal-btn.primary:hover { background: var(--fluor-dim); }
+.modal-btn.danger { background: var(--warn); color: #0a0a0a; border-color: var(--warn); }
+.modal-btn.single { flex: none; width: 100%; }
+.footer-note { text-align: center; font-size: 11px; color: #333; margin-top: 16px; }
+@media (max-width: 560px) { .main-nav-btn span { display: none; } .classes-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="main-nav">
+    <button class="main-nav-btn active" data-view="client" onclick="switchView('client')"><i class="ti ti-barbell"></i><span>Vista socio</span></button>
+    <button class="main-nav-btn" data-view="prof" onclick="switchView('prof')"><i class="ti ti-clipboard-list"></i><span>Vista profesor</span></button>
+    <button class="main-nav-btn" data-view="owner" onclick="switchView('owner')"><i class="ti ti-chart-bar"></i><span>Vista dueño</span></button>
+  </nav>
+  <div class="shell">
+    <div id="v-client" class="view active">
+      <div class="topbar">
+        <div><div class="brand-logo"><span class="brand-in">IN</span><span class="brand-bolt">&#9889;</span><span class="brand-fit">FIT</span></div><div class="brand-tagline">Reservá tu clase</div></div>
+        <div class="user-chip"><div class="user-av">LM</div><span class="user-name">Laura</span></div>
+      </div>
+      <div class="day-strip" id="day-strip"></div>
+      <div class="section-eyebrow"><span id="eyebrow-date">&mdash;</span><div class="eyebrow-line"></div><span id="eyebrow-count">&mdash;</span></div>
+      <div class="class-list" id="class-list"></div>
+    </div>
+    <div id="v-prof" class="view">
+      <div class="topbar">
+        <div><div class="brand-logo"><span class="brand-in">IN</span><span class="brand-bolt">&#9889;</span><span class="brand-fit">FIT</span></div><div class="brand-tagline">Panel del profesor</div></div>
+        <div class="user-chip"><div class="user-av">RV</div><span class="user-name">Romina</span></div>
+      </div>
+      <div class="prof-top">
+        <div class="prof-av">RV</div>
+        <div><div class="prof-info-name">Prof. Romina Vargas</div><div class="prof-info-class"><i class="ti ti-bolt"></i> Funcional &mdash; Martes 7:00 AM</div></div>
+      </div>
+      <div class="stats-bar">
+        <div class="stat s-total"><div class="stat-n" id="st-total">7</div><div class="stat-l">Inscriptos</div></div>
+        <div class="stat s-pres"><div class="stat-n" id="st-pres">5</div><div class="stat-l">Presentes</div></div>
+        <div class="stat s-ause"><div class="stat-n" id="st-ause">2</div><div class="stat-l">Ausentes</div></div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="pb-label"><span>Asistencia</span><span id="pb-pct">71%</span></div>
+        <div class="pb-track"><div class="pb-fill" id="pb-fill" style="width:71%"></div></div>
+      </div>
+      <div class="list-head"><span class="list-label">Inscriptos</span><span class="list-hint"><i class="ti ti-hand-finger"></i> Tocá para marcar asistencia</span></div>
+      <div class="students" id="students"></div>
+    </div>
+    <div id="v-owner" class="view">
+      <div class="topbar">
+        <div><div class="brand-logo"><span class="brand-in">IN</span><span class="brand-bolt">&#9889;</span><span class="brand-fit">FIT</span></div><div class="brand-tagline">Panel de turnos</div></div>
+        <div class="user-chip owner-chip"><div class="user-av">I</div><div><div class="user-name">Ian</div><div class="owner-role">Dueño</div></div></div>
+      </div>
+      <div class="dash">
+        <div class="dash-title">Resumen de turnos<span class="period">Esta semana</span></div>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-label"><i class="ti ti-calendar-check"></i>Turnos reservados</div><div class="kpi-value">312</div><div class="kpi-sub up"><i class="ti ti-trending-up"></i> +18% vs semana pasada</div></div>
+          <div class="kpi"><div class="kpi-label"><i class="ti ti-stretching"></i>Clases dictadas</div><div class="kpi-value">38</div><div class="kpi-sub" style="color:var(--txt2)">en 5 días</div></div>
+          <div class="kpi"><div class="kpi-label"><i class="ti ti-user-check"></i>Asistencia promedio</div><div class="kpi-value">82%</div><div class="kpi-sub up">de los anotados vinieron</div></div>
+          <div class="kpi neutral"><div class="kpi-label"><i class="ti ti-flame"></i>Clase más demandada</div><div class="kpi-value" style="font-size:18px;padding-top:4px;">Funcional AM</div><div class="kpi-sub" style="color:var(--txt2)">95% de ocupación</div></div>
+        </div>
+        <div class="section-lbl">Turnos reservados por día <span class="lbl-line"></span></div>
+        <div class="chart-card">
+          <div class="chart-head"><span class="chart-title">Esta semana</span><span class="chart-total">Total: 312 turnos</span></div>
+          <div class="bars">
+            <div class="bar-col"><div class="bar peak" style="height:100%"></div><span class="bar-label">Lun</span></div>
+            <div class="bar-col"><div class="bar" style="height:82%"></div><span class="bar-label">Mar</span></div>
+            <div class="bar-col"><div class="bar" style="height:90%"></div><span class="bar-label">Mié</span></div>
+            <div class="bar-col"><div class="bar" style="height:68%"></div><span class="bar-label">Jue</span></div>
+            <div class="bar-col"><div class="bar" style="height:78%"></div><span class="bar-label">Vie</span></div>
+          </div>
+        </div>
+        <div class="section-lbl">Detalle operativo <span class="lbl-line"></span></div>
+        <div class="classes-row">
+          <div class="mini-card">
+            <div class="mini-title">Ocupación por clase</div>
+            <div class="occ-item"><span class="occ-name">Funcional AM</span><div class="occ-track"><div class="occ-fill" style="width:95%"></div></div><span class="occ-pct">95%</span></div>
+            <div class="occ-item"><span class="occ-name">Funcional PM</span><div class="occ-track"><div class="occ-fill" style="width:88%"></div></div><span class="occ-pct">88%</span></div>
+            <div class="occ-item"><span class="occ-name">Core</span><div class="occ-track"><div class="occ-fill med" style="width:60%"></div></div><span class="occ-pct">60%</span></div>
+            <div class="occ-item"><span class="occ-name">Musculación</span><div class="occ-track"><div class="occ-fill" style="width:74%"></div></div><span class="occ-pct">74%</span></div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-title">Esta semana</div>
+            <div class="alert-item"><div class="alert-icon ai-ok"><i class="ti ti-calendar-plus"></i></div><span class="alert-txt">Turnos reservados</span><span class="alert-val up">312</span></div>
+            <div class="alert-item"><div class="alert-icon ai-warn"><i class="ti ti-calendar-x"></i></div><span class="alert-txt">Ausencias (no-show)</span><span class="alert-val down">56</span></div>
+            <div class="alert-item"><div class="alert-icon ai-warn"><i class="ti ti-clock-exclamation"></i></div><span class="alert-txt">Clases con cupos libres</span><span class="alert-val down">7</span></div>
+            <div class="alert-item"><div class="alert-icon ai-ok"><i class="ti ti-flame"></i></div><span class="alert-txt">Clase más demandada</span><span class="alert-val up">Func. AM</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-overlay" id="modal"><div class="modal" id="modal-box"></div></div>
+  </div>
+  <div class="footer-note">IN FIT · Demo de sistema de turnos</div>
+</div>
+<script>
+const SCHEDULE = {
+  9:  { label: "Lunes 9 de junio", classes: [
+    { hour:"8:00", ampm:"AM", name:"Funcional", prof:"Romina", dur:"50 min", spots:6, featured:true },
+    { hour:"10:00", ampm:"AM", name:"Musculación guiada", prof:"Marcos", dur:"60 min", spots:10 },
+    { hour:"7:00", ampm:"PM", name:"Funcional nocturno", prof:"Romina", dur:"50 min", spots:0 }
+  ]},
+  10: { label: "Martes 10 de junio", classes: [
+    { hour:"7:00", ampm:"AM", name:"Funcional", prof:"Romina", dur:"50 min", spots:8, featured:true },
+    { hour:"9:00", ampm:"AM", name:"Funcional intensidad media", prof:"Marcos", dur:"50 min", spots:2 },
+    { hour:"11:00", ampm:"AM", name:"Abdominales y core", prof:"Claudia", dur:"45 min", spots:0 },
+    { hour:"6:00", ampm:"PM", name:"Funcional nocturno", prof:"Romina", dur:"60 min", spots:12 }
+  ]},
+  11: { label: "Miércoles 11 de junio", classes: [
+    { hour:"8:00", ampm:"AM", name:"Funcional", prof:"Marcos", dur:"50 min", spots:4, featured:true },
+    { hour:"6:00", ampm:"PM", name:"Core y movilidad", prof:"Claudia", dur:"45 min", spots:9 },
+    { hour:"8:00", ampm:"PM", name:"Funcional avanzado", prof:"Romina", dur:"60 min", spots:1 }
+  ]},
+  12: { label: "Jueves 12 de junio", classes: [
+    { hour:"7:00", ampm:"AM", name:"Funcional", prof:"Romina", dur:"50 min", spots:7, featured:true },
+    { hour:"10:00", ampm:"AM", name:"Musculación guiada", prof:"Marcos", dur:"60 min", spots:5 },
+    { hour:"7:00", ampm:"PM", name:"Funcional nocturno", prof:"Claudia", dur:"50 min", spots:3 }
+  ]},
+  13: { label: "Viernes 13 de junio", classes: [
+    { hour:"9:00", ampm:"AM", name:"Funcional", prof:"Marcos", dur:"50 min", spots:11, featured:true },
+    { hour:"6:00", ampm:"PM", name:"Funcional intensidad alta", prof:"Romina", dur:"60 min", spots:6 }
+  ]}
+};
+const DAYS = [ { d:"Lun", n:9 }, { d:"Mar", n:10 }, { d:"Mié", n:11 }, { d:"Jue", n:12 }, { d:"Vie", n:13 } ];
+let selectedDay = 10;
+const joined = {};
+function renderDays() {
+  document.getElementById('day-strip').innerHTML = DAYS.map(day =>
+    '<div class="day-btn ' + (day.n === selectedDay ? 'sel' : '') + '" onclick="selectDay(' + day.n + ')"><span class="day-d">' + day.d + '</span><span class="day-n">' + day.n + '</span></div>'
+  ).join('');
+}
+function renderClasses() {
+  const data = SCHEDULE[selectedDay];
+  document.getElementById('eyebrow-date').textContent = data.label;
+  document.getElementById('eyebrow-count').textContent = data.classes.length + ' clases';
+  const list = document.getElementById('class-list');
+  if (data.classes.length === 0) {
+    list.innerHTML = '<div class="empty-day"><i class="ti ti-calendar-off"></i>No hay clases este día</div>';
+    return;
+  }
+  list.innerHTML = data.classes.map(function(c, i) {
+    const key = selectedDay + '-' + i;
+    const isJoined = joined[key];
+    const isFull = c.spots <= 0 && !isJoined;
+    let tag;
+    if (isFull) tag = '<span class="tag tag-full">Sin lugar</span>';
+    else if (c.spots <= 2) tag = '<span class="tag tag-low">' + c.spots + ' lugar' + (c.spots>1?'es':'') + '</span>';
+    else tag = '<span class="tag tag-free">' + c.spots + ' lugares</span>';
+    let btn;
+    if (isJoined) btn = '<button class="btn-join joined" onclick="askCancel(' + i + ')">✓ Anotado</button>';
+    else if (isFull) btn = '<button class="btn-join full" disabled>Completo</button>';
+    else btn = '<button class="btn-join" onclick="askJoin(' + i + ')">Anotarme</button>';
+    return '<div class="class-row ' + (c.featured ? 'featured' : '') + '">' +
+      (c.featured ? '<div class="featured-badge">Más popular</div>' : '') +
+      '<div class="time-col"><div class="t-hour">' + c.hour + '</div><div class="t-ampm">' + c.ampm + '</div></div>' +
+      '<div class="sep"></div>' +
+      '<div class="class-body"><div class="c-name">' + c.name + '</div>' +
+      '<div class="c-meta"><span><i class="ti ti-user"></i>Prof. ' + c.prof + '</span><span><i class="ti ti-clock"></i>' + c.dur + '</span></div></div>' +
+      tag + btn + '</div>';
+  }).join('');
+}
+function selectDay(n) { selectedDay = n; renderDays(); renderClasses(); }
+function askJoin(i) {
+  const c = SCHEDULE[selectedDay].classes[i];
+  showModal({ icon:'ok', iconClass:'ti-calendar-check', title:'¿Confirmás tu reserva?', text:'Vas a anotarte en',
+    cls: c.name + ' · ' + c.hour + ' ' + c.ampm, clsCancel:false, primaryLabel:'Confirmar', primaryClass:'primary',
+    onPrimary: function() { confirmJoin(i); } });
+}
+function confirmJoin(i) {
+  const key = selectedDay + '-' + i;
+  joined[key] = true;
+  SCHEDULE[selectedDay].classes[i].spots--;
+  const c = SCHEDULE[selectedDay].classes[i];
+  closeModal();
+  showModal({ icon:'ok', iconClass:'ti-circle-check', title:'¡Listo!', text:'Quedaste anotado en',
+    cls: c.name + ' · ' + c.hour + ' ' + c.ampm, clsCancel:false, single:true, primaryLabel:'Entendido', primaryClass:'primary',
+    onPrimary: function() { closeModal(); renderClasses(); } });
+}
+function askCancel(i) {
+  const c = SCHEDULE[selectedDay].classes[i];
+  showModal({ icon:'cancel', iconClass:'ti-calendar-x', title:'¿Cancelar tu turno?', text:'Vas a liberar tu lugar en',
+    cls: c.name + ' · ' + c.hour + ' ' + c.ampm, clsCancel:true, primaryLabel:'Sí, cancelar', primaryClass:'danger', cancelLabel:'Volver',
+    onPrimary: function() { confirmCancel(i); } });
+}
+function confirmCancel(i) {
+  const key = selectedDay + '-' + i;
+  delete joined[key];
+  SCHEDULE[selectedDay].classes[i].spots++;
+  closeModal();
+  renderClasses();
+}
+function showModal(opt) {
+  const box = document.getElementById('modal-box');
+  const cancelBtn = opt.single ? '' : '<button class="modal-btn" onclick="closeModal()">' + (opt.cancelLabel || 'Cancelar') + '</button>';
+  box.innerHTML = '<div class="modal-icon ' + opt.icon + '"><i class="ti ' + opt.iconClass + '"></i></div>' +
+    '<div class="modal-title">' + opt.title + '</div>' +
+    '<div class="modal-text">' + opt.text + '</div>' +
+    '<div class="modal-class ' + (opt.clsCancel ? 'cancel-c' : '') + '">' + opt.cls + '</div>' +
+    '<div class="modal-btns">' + cancelBtn +
+    '<button class="modal-btn ' + opt.primaryClass + ' ' + (opt.single ? 'single' : '') + '" id="modal-primary">' + opt.primaryLabel + '</button></div>';
+  document.getElementById('modal-primary').onclick = opt.onPrimary;
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+document.getElementById('modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+const STUDENTS = [
+  { name:"Laura Méndez", initials:"LM", present:true },
+  { name:"Carlos Ríos", initials:"CR", present:true },
+  { name:"Sofía Pedraza", initials:"SP", present:false },
+  { name:"Diego Gómez", initials:"DG", present:true },
+  { name:"Valentina Acosta", initials:"VA", present:true },
+  { name:"Martín Ferreyra", initials:"MF", present:false },
+  { name:"Ana García", initials:"AG", present:true }
+];
+function renderStudents() {
+  document.getElementById('students').innerHTML = STUDENTS.map(function(s, i) {
+    const avBg = s.present ? 'background:rgba(200,255,0,0.1);color:var(--fluor);' : 'background:#1a1a1a;color:#555;';
+    const status = s.present
+      ? '<div class="stu-status present"><i class="ti ti-check"></i>Presente</div>'
+      : '<div class="stu-status absent"><i class="ti ti-x"></i>Ausente</div>';
+    return '<div class="stu" onclick="toggleAttendance(' + i + ')">' +
+      '<div class="stu-av" style="' + avBg + '">' + s.initials + '</div>' +
+      '<div class="stu-info"><div class="stu-name">' + s.name + '</div></div>' + status + '</div>';
+  }).join('');
+  updateStats();
+}
+function toggleAttendance(i) { STUDENTS[i].present = !STUDENTS[i].present; renderStudents(); }
+function updateStats() {
+  const total = STUDENTS.length;
+  const pres = STUDENTS.filter(function(s) { return s.present; }).length;
+  const ause = total - pres;
+  const pct = Math.round((pres / total) * 100);
+  document.getElementById('st-total').textContent = total;
+  document.getElementById('st-pres').textContent = pres;
+  document.getElementById('st-ause').textContent = ause;
+  document.getElementById('pb-pct').textContent = pct + '%';
+  document.getElementById('pb-fill').style.width = pct + '%';
+}
+function switchView(v) {
+  document.querySelectorAll('.view').forEach(function(el) { el.classList.remove('active'); });
+  document.getElementById('v-' + v).classList.add('active');
+  document.querySelectorAll('.main-nav-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.view === v); });
+}
+renderDays();
+renderClasses();
+renderStudents();
+</script>
+</body>
+</html>
