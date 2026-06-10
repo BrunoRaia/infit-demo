@@ -125,7 +125,7 @@ body { background: #050505; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .bar { width: 100%; background: var(--fluor-bg-s); border: 0.5px solid rgba(200,255,0,0.2); border-radius: 4px 4px 0 0; min-height: 4px; }
 .bar.peak { background: var(--fluor); border-color: var(--fluor); }
 .bar-label { font-size: 10px; color: var(--txt2); }
-.classes-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.classes-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
 .mini-card { background: var(--card); border: 0.5px solid #1e1e1e; border-radius: var(--radius); padding: 12px 14px; }
 .mini-title { font-size: 11px; color: var(--txt2); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
 .occ-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
@@ -143,9 +143,33 @@ body { background: #050505; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .alert-txt { font-size: 12px; color: #bbb; flex: 1; }
 .alert-val { font-size: 12px; font-weight: 500; }
 .down { color: var(--warn); }
+/* ---- Gestión de clases (dueño) ---- */
+.mgmt-head { display: flex; justify-content: space-between; align-items: center; margin: 4px 0 12px; }
+.mgmt-head .section-lbl { margin: 0; }
+.btn-add { display: flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 8px; border: 0.5px solid var(--fluor); background: var(--fluor); color: #0a0a0a; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all 0.12s; white-space: nowrap; }
+.btn-add:hover { background: var(--fluor-dim); }
+.btn-add i { font-size: 15px; }
+.mgmt-day-strip { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; }
+.mgmt-day-btn { padding: 7px 14px; border-radius: 8px; border: 0.5px solid #1e1e1e; background: var(--card); cursor: pointer; font-size: 12px; color: var(--txt2); white-space: nowrap; transition: all 0.12s; font-family: inherit; }
+.mgmt-day-btn.sel { background: var(--fluor-bg-s); border-color: var(--border-fluor); color: var(--fluor); }
+.mgmt-list { display: flex; flex-direction: column; gap: 8px; min-height: 60px; }
+.mgmt-row { background: var(--card); border: 0.5px solid #1e1e1e; border-radius: var(--radius); padding: 10px 12px; display: flex; align-items: center; gap: 12px; }
+.mgmt-time { min-width: 56px; font-size: 13px; font-weight: 500; color: var(--fluor); }
+.mgmt-time span { font-size: 10px; color: var(--txt2); }
+.mgmt-info { flex: 1; min-width: 0; }
+.mgmt-name { font-size: 13px; font-weight: 500; color: var(--txt); }
+.mgmt-meta { font-size: 11px; color: var(--txt2); margin-top: 2px; }
+.mgmt-actions { display: flex; gap: 6px; }
+.icon-btn { width: 30px; height: 30px; border-radius: 7px; border: 0.5px solid #2a2a2a; background: transparent; color: var(--txt2); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.12s; }
+.icon-btn:hover { background: #1a1a1a; color: var(--fluor); border-color: var(--border-fluor); }
+.icon-btn.del:hover { color: var(--warn); border-color: rgba(239,159,39,0.4); }
+.icon-btn i { font-size: 15px; }
+.mgmt-empty { text-align: center; color: var(--txt2); font-size: 12px; padding: 20px; }
+/* ---- Modal ---- */
 .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 50; }
 .modal-overlay.show { display: flex; }
-.modal { background: #131313; border: 0.5px solid #2a2a2a; border-radius: 14px; padding: 24px; max-width: 320px; width: 100%; text-align: center; animation: pop 0.18s ease; }
+.modal { background: #131313; border: 0.5px solid #2a2a2a; border-radius: 14px; padding: 24px; max-width: 340px; width: 100%; text-align: center; animation: pop 0.18s ease; }
+.modal.form-modal { text-align: left; }
 @keyframes pop { from { transform: scale(0.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .modal-icon { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 14px; }
 .modal-icon.ok { background: var(--fluor-bg-s); color: var(--fluor); }
@@ -161,6 +185,19 @@ body { background: #050505; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .modal-btn.primary:hover { background: var(--fluor-dim); }
 .modal-btn.danger { background: var(--warn); color: #0a0a0a; border-color: var(--warn); }
 .modal-btn.single { flex: none; width: 100%; }
+/* ---- Form ---- */
+.form-title { font-size: 16px; font-weight: 500; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.form-title i { color: var(--fluor); }
+.field { margin-bottom: 12px; }
+.field-label { font-size: 11px; color: var(--txt2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; display: block; }
+.field input, .field select { width: 100%; background: #0d0d0d; border: 0.5px solid #2a2a2a; border-radius: 8px; padding: 9px 11px; color: var(--txt); font-size: 13px; font-family: inherit; transition: border-color 0.12s; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--border-fluor); }
+.field-row { display: flex; gap: 10px; }
+.field-row .field { flex: 1; }
+.field-check { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 0; }
+.field-check input { width: auto; }
+.field-check span { font-size: 13px; color: #bbb; }
+.form-error { font-size: 11px; color: var(--warn); margin-top: -6px; margin-bottom: 10px; min-height: 14px; }
 .footer-note { text-align: center; font-size: 11px; color: #333; margin-top: 16px; }
 @media (max-width: 560px) { .main-nav-btn span { display: none; } .classes-row { grid-template-columns: 1fr; } }
 </style>
@@ -244,6 +281,12 @@ body { background: #050505; font-family: -apple-system, BlinkMacSystemFont, 'Seg
             <div class="alert-item"><div class="alert-icon ai-ok"><i class="ti ti-flame"></i></div><span class="alert-txt">Clase más demandada</span><span class="alert-val up">Func. AM</span></div>
           </div>
         </div>
+        <div class="mgmt-head">
+          <span class="section-lbl" style="margin:0;">Gestión de clases</span>
+          <button class="btn-add" onclick="openAddForm()"><i class="ti ti-plus"></i>Agregar clase</button>
+        </div>
+        <div class="mgmt-day-strip" id="mgmt-day-strip"></div>
+        <div class="mgmt-list" id="mgmt-list"></div>
       </div>
     </div>
     <div class="modal-overlay" id="modal"><div class="modal" id="modal-box"></div></div>
@@ -251,51 +294,56 @@ body { background: #050505; font-family: -apple-system, BlinkMacSystemFont, 'Seg
   <div class="footer-note">IN FIT · Demo de sistema de turnos</div>
 </div>
 <script>
+/* ============================================================
+   FUENTE ÚNICA DE DATOS
+   Tanto la vista del socio como la gestión del dueño leen y
+   escriben sobre este mismo objeto. Por eso, lo que Ian cambia
+   en su panel aparece al instante en la vista del socio.
+   ============================================================ */
 const SCHEDULE = {
   9:  { label: "Lunes 9 de junio", classes: [
     { hour:"8:00", ampm:"AM", name:"Funcional", prof:"Romina", dur:"50 min", spots:6, featured:true },
     { hour:"10:00", ampm:"AM", name:"Musculación guiada", prof:"Marcos", dur:"60 min", spots:10 },
-    { hour:"7:00", ampm:"PM", name:"Funcional nocturno", prof:"Romina", dur:"50 min", spots:0 }
-  ]},
+    { hour:"7:00", ampm:"PM", name:"Funcional nocturno", prof:"Romina", dur:"50 min", spots:0 } ]},
   10: { label: "Martes 10 de junio", classes: [
     { hour:"7:00", ampm:"AM", name:"Funcional", prof:"Romina", dur:"50 min", spots:8, featured:true },
     { hour:"9:00", ampm:"AM", name:"Funcional intensidad media", prof:"Marcos", dur:"50 min", spots:2 },
     { hour:"11:00", ampm:"AM", name:"Abdominales y core", prof:"Claudia", dur:"45 min", spots:0 },
-    { hour:"6:00", ampm:"PM", name:"Funcional nocturno", prof:"Romina", dur:"60 min", spots:12 }
-  ]},
+    { hour:"6:00", ampm:"PM", name:"Funcional nocturno", prof:"Romina", dur:"60 min", spots:12 } ]},
   11: { label: "Miércoles 11 de junio", classes: [
     { hour:"8:00", ampm:"AM", name:"Funcional", prof:"Marcos", dur:"50 min", spots:4, featured:true },
     { hour:"6:00", ampm:"PM", name:"Core y movilidad", prof:"Claudia", dur:"45 min", spots:9 },
-    { hour:"8:00", ampm:"PM", name:"Funcional avanzado", prof:"Romina", dur:"60 min", spots:1 }
-  ]},
+    { hour:"8:00", ampm:"PM", name:"Funcional avanzado", prof:"Romina", dur:"60 min", spots:1 } ]},
   12: { label: "Jueves 12 de junio", classes: [
     { hour:"7:00", ampm:"AM", name:"Funcional", prof:"Romina", dur:"50 min", spots:7, featured:true },
     { hour:"10:00", ampm:"AM", name:"Musculación guiada", prof:"Marcos", dur:"60 min", spots:5 },
-    { hour:"7:00", ampm:"PM", name:"Funcional nocturno", prof:"Claudia", dur:"50 min", spots:3 }
-  ]},
+    { hour:"7:00", ampm:"PM", name:"Funcional nocturno", prof:"Claudia", dur:"50 min", spots:3 } ]},
   13: { label: "Viernes 13 de junio", classes: [
     { hour:"9:00", ampm:"AM", name:"Funcional", prof:"Marcos", dur:"50 min", spots:11, featured:true },
-    { hour:"6:00", ampm:"PM", name:"Funcional intensidad alta", prof:"Romina", dur:"60 min", spots:6 }
-  ]}
+    { hour:"6:00", ampm:"PM", name:"Funcional intensidad alta", prof:"Romina", dur:"60 min", spots:6 } ]}
 };
 const DAYS = [ { d:"Lun", n:9 }, { d:"Mar", n:10 }, { d:"Mié", n:11 }, { d:"Jue", n:12 }, { d:"Vie", n:13 } ];
+const DAY_NAMES = { 9:"Lunes", 10:"Martes", 11:"Miércoles", 12:"Jueves", 13:"Viernes" };
 let selectedDay = 10;
+let mgmtDay = 10;
 const joined = {};
+
+/* ---------- VISTA SOCIO ---------- */
 function renderDays() {
-  document.getElementById('day-strip').innerHTML = DAYS.map(day =>
-    '<div class="day-btn ' + (day.n === selectedDay ? 'sel' : '') + '" onclick="selectDay(' + day.n + ')"><span class="day-d">' + day.d + '</span><span class="day-n">' + day.n + '</span></div>'
-  ).join('');
+  document.getElementById('day-strip').innerHTML = DAYS.map(function(day){
+    return '<div class="day-btn ' + (day.n===selectedDay?'sel':'') + '" onclick="selectDay(' + day.n + ')"><span class="day-d">' + day.d + '</span><span class="day-n">' + day.n + '</span></div>';
+  }).join('');
 }
 function renderClasses() {
   const data = SCHEDULE[selectedDay];
   document.getElementById('eyebrow-date').textContent = data.label;
-  document.getElementById('eyebrow-count').textContent = data.classes.length + ' clases';
+  document.getElementById('eyebrow-count').textContent = data.classes.length + ' clase' + (data.classes.length!==1?'s':'');
   const list = document.getElementById('class-list');
   if (data.classes.length === 0) {
     list.innerHTML = '<div class="empty-day"><i class="ti ti-calendar-off"></i>No hay clases este día</div>';
     return;
   }
-  list.innerHTML = data.classes.map(function(c, i) {
+  list.innerHTML = data.classes.map(function(c, i){
     const key = selectedDay + '-' + i;
     const isJoined = joined[key];
     const isFull = c.spots <= 0 && !isJoined;
@@ -307,100 +355,217 @@ function renderClasses() {
     if (isJoined) btn = '<button class="btn-join joined" onclick="askCancel(' + i + ')">✓ Anotado</button>';
     else if (isFull) btn = '<button class="btn-join full" disabled>Completo</button>';
     else btn = '<button class="btn-join" onclick="askJoin(' + i + ')">Anotarme</button>';
-    return '<div class="class-row ' + (c.featured ? 'featured' : '') + '">' +
-      (c.featured ? '<div class="featured-badge">Más popular</div>' : '') +
-      '<div class="time-col"><div class="t-hour">' + c.hour + '</div><div class="t-ampm">' + c.ampm + '</div></div>' +
-      '<div class="sep"></div>' +
-      '<div class="class-body"><div class="c-name">' + c.name + '</div>' +
-      '<div class="c-meta"><span><i class="ti ti-user"></i>Prof. ' + c.prof + '</span><span><i class="ti ti-clock"></i>' + c.dur + '</span></div></div>' +
+    return '<div class="class-row ' + (c.featured?'featured':'') + '">' +
+      (c.featured?'<div class="featured-badge">Más popular</div>':'') +
+      '<div class="time-col"><div class="t-hour">' + c.hour + '</div><div class="t-ampm">' + c.ampm + '</div></div><div class="sep"></div>' +
+      '<div class="class-body"><div class="c-name">' + c.name + '</div><div class="c-meta"><span><i class="ti ti-user"></i>Prof. ' + c.prof + '</span><span><i class="ti ti-clock"></i>' + c.dur + '</span></div></div>' +
       tag + btn + '</div>';
   }).join('');
 }
 function selectDay(n) { selectedDay = n; renderDays(); renderClasses(); }
 function askJoin(i) {
   const c = SCHEDULE[selectedDay].classes[i];
-  showModal({ icon:'ok', iconClass:'ti-calendar-check', title:'¿Confirmás tu reserva?', text:'Vas a anotarte en',
-    cls: c.name + ' · ' + c.hour + ' ' + c.ampm, clsCancel:false, primaryLabel:'Confirmar', primaryClass:'primary',
-    onPrimary: function() { confirmJoin(i); } });
+  showConfirm({ icon:'ok', iconClass:'ti-calendar-check', title:'¿Confirmás tu reserva?', text:'Vas a anotarte en',
+    cls: c.name + ' · ' + c.hour + ' ' + c.ampm, clsCancel:false, primaryLabel:'Confirmar', primaryClass:'primary', onPrimary:function(){ confirmJoin(i); } });
 }
 function confirmJoin(i) {
-  const key = selectedDay + '-' + i;
-  joined[key] = true;
+  joined[selectedDay + '-' + i] = true;
   SCHEDULE[selectedDay].classes[i].spots--;
   const c = SCHEDULE[selectedDay].classes[i];
   closeModal();
-  showModal({ icon:'ok', iconClass:'ti-circle-check', title:'¡Listo!', text:'Quedaste anotado en',
-    cls: c.name + ' · ' + c.hour + ' ' + c.ampm, clsCancel:false, single:true, primaryLabel:'Entendido', primaryClass:'primary',
-    onPrimary: function() { closeModal(); renderClasses(); } });
+  showConfirm({ icon:'ok', iconClass:'ti-circle-check', title:'¡Listo!', text:'Quedaste anotado en',
+    cls: c.name + ' · ' + c.hour + ' ' + c.ampm, clsCancel:false, single:true, primaryLabel:'Entendido', primaryClass:'primary', onPrimary:function(){ closeModal(); renderClasses(); } });
 }
 function askCancel(i) {
   const c = SCHEDULE[selectedDay].classes[i];
-  showModal({ icon:'cancel', iconClass:'ti-calendar-x', title:'¿Cancelar tu turno?', text:'Vas a liberar tu lugar en',
-    cls: c.name + ' · ' + c.hour + ' ' + c.ampm, clsCancel:true, primaryLabel:'Sí, cancelar', primaryClass:'danger', cancelLabel:'Volver',
-    onPrimary: function() { confirmCancel(i); } });
+  showConfirm({ icon:'cancel', iconClass:'ti-calendar-x', title:'¿Cancelar tu turno?', text:'Vas a liberar tu lugar en',
+    cls: c.name + ' · ' + c.hour + ' ' + c.ampm, clsCancel:true, primaryLabel:'Sí, cancelar', primaryClass:'danger', cancelLabel:'Volver', onPrimary:function(){ confirmCancel(i); } });
 }
 function confirmCancel(i) {
-  const key = selectedDay + '-' + i;
-  delete joined[key];
+  delete joined[selectedDay + '-' + i];
   SCHEDULE[selectedDay].classes[i].spots++;
-  closeModal();
-  renderClasses();
+  closeModal(); renderClasses();
 }
-function showModal(opt) {
+
+/* ---------- MODAL: confirmaciones ---------- */
+function showConfirm(opt) {
   const box = document.getElementById('modal-box');
+  box.className = 'modal';
   const cancelBtn = opt.single ? '' : '<button class="modal-btn" onclick="closeModal()">' + (opt.cancelLabel || 'Cancelar') + '</button>';
   box.innerHTML = '<div class="modal-icon ' + opt.icon + '"><i class="ti ' + opt.iconClass + '"></i></div>' +
-    '<div class="modal-title">' + opt.title + '</div>' +
-    '<div class="modal-text">' + opt.text + '</div>' +
-    '<div class="modal-class ' + (opt.clsCancel ? 'cancel-c' : '') + '">' + opt.cls + '</div>' +
-    '<div class="modal-btns">' + cancelBtn +
-    '<button class="modal-btn ' + opt.primaryClass + ' ' + (opt.single ? 'single' : '') + '" id="modal-primary">' + opt.primaryLabel + '</button></div>';
+    '<div class="modal-title">' + opt.title + '</div><div class="modal-text">' + opt.text + '</div>' +
+    '<div class="modal-class ' + (opt.clsCancel?'cancel-c':'') + '">' + opt.cls + '</div>' +
+    '<div class="modal-btns">' + cancelBtn + '<button class="modal-btn ' + opt.primaryClass + ' ' + (opt.single?'single':'') + '" id="modal-primary">' + opt.primaryLabel + '</button></div>';
   document.getElementById('modal-primary').onclick = opt.onPrimary;
   document.getElementById('modal').classList.add('show');
 }
 function closeModal() { document.getElementById('modal').classList.remove('show'); }
 document.getElementById('modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+/* ---------- VISTA PROFESOR ---------- */
 const STUDENTS = [
-  { name:"Laura Méndez", initials:"LM", present:true },
-  { name:"Carlos Ríos", initials:"CR", present:true },
-  { name:"Sofía Pedraza", initials:"SP", present:false },
-  { name:"Diego Gómez", initials:"DG", present:true },
-  { name:"Valentina Acosta", initials:"VA", present:true },
-  { name:"Martín Ferreyra", initials:"MF", present:false },
+  { name:"Laura Méndez", initials:"LM", present:true }, { name:"Carlos Ríos", initials:"CR", present:true },
+  { name:"Sofía Pedraza", initials:"SP", present:false }, { name:"Diego Gómez", initials:"DG", present:true },
+  { name:"Valentina Acosta", initials:"VA", present:true }, { name:"Martín Ferreyra", initials:"MF", present:false },
   { name:"Ana García", initials:"AG", present:true }
 ];
 function renderStudents() {
-  document.getElementById('students').innerHTML = STUDENTS.map(function(s, i) {
+  document.getElementById('students').innerHTML = STUDENTS.map(function(s, i){
     const avBg = s.present ? 'background:rgba(200,255,0,0.1);color:var(--fluor);' : 'background:#1a1a1a;color:#555;';
-    const status = s.present
-      ? '<div class="stu-status present"><i class="ti ti-check"></i>Presente</div>'
-      : '<div class="stu-status absent"><i class="ti ti-x"></i>Ausente</div>';
-    return '<div class="stu" onclick="toggleAttendance(' + i + ')">' +
-      '<div class="stu-av" style="' + avBg + '">' + s.initials + '</div>' +
-      '<div class="stu-info"><div class="stu-name">' + s.name + '</div></div>' + status + '</div>';
+    const status = s.present ? '<div class="stu-status present"><i class="ti ti-check"></i>Presente</div>' : '<div class="stu-status absent"><i class="ti ti-x"></i>Ausente</div>';
+    return '<div class="stu" onclick="toggleAttendance(' + i + ')"><div class="stu-av" style="' + avBg + '">' + s.initials + '</div><div class="stu-info"><div class="stu-name">' + s.name + '</div></div>' + status + '</div>';
   }).join('');
   updateStats();
 }
 function toggleAttendance(i) { STUDENTS[i].present = !STUDENTS[i].present; renderStudents(); }
 function updateStats() {
-  const total = STUDENTS.length;
-  const pres = STUDENTS.filter(function(s) { return s.present; }).length;
-  const ause = total - pres;
-  const pct = Math.round((pres / total) * 100);
+  const total = STUDENTS.length, pres = STUDENTS.filter(function(s){return s.present;}).length, ause = total - pres, pct = Math.round((pres/total)*100);
   document.getElementById('st-total').textContent = total;
   document.getElementById('st-pres').textContent = pres;
   document.getElementById('st-ause').textContent = ause;
   document.getElementById('pb-pct').textContent = pct + '%';
   document.getElementById('pb-fill').style.width = pct + '%';
 }
+
+/* ---------- VISTA DUEÑO: gestión de clases ---------- */
+function renderMgmtDays() {
+  document.getElementById('mgmt-day-strip').innerHTML = DAYS.map(function(day){
+    return '<button class="mgmt-day-btn ' + (day.n===mgmtDay?'sel':'') + '" onclick="selectMgmtDay(' + day.n + ')">' + day.d + ' ' + day.n + '</button>';
+  }).join('');
+}
+function renderMgmtList() {
+  const data = SCHEDULE[mgmtDay];
+  const list = document.getElementById('mgmt-list');
+  if (data.classes.length === 0) {
+    list.innerHTML = '<div class="mgmt-empty">No hay clases cargadas este día. Tocá "Agregar clase".</div>';
+    return;
+  }
+  list.innerHTML = data.classes.map(function(c, i){
+    return '<div class="mgmt-row">' +
+      '<div class="mgmt-time">' + c.hour + ' <span>' + c.ampm + '</span></div>' +
+      '<div class="mgmt-info"><div class="mgmt-name">' + c.name + '</div><div class="mgmt-meta">' + c.prof + ' · ' + c.dur + ' · ' + c.spots + ' cupos</div></div>' +
+      '<div class="mgmt-actions">' +
+      '<button class="icon-btn" onclick="openEditForm(' + i + ')" aria-label="Editar"><i class="ti ti-pencil"></i></button>' +
+      '<button class="icon-btn del" onclick="askDeleteClass(' + i + ')" aria-label="Eliminar"><i class="ti ti-trash"></i></button>' +
+      '</div></div>';
+  }).join('');
+}
+function selectMgmtDay(n) { mgmtDay = n; renderMgmtDays(); renderMgmtList(); }
+
+/* ---------- Formulario agregar/editar ---------- */
+function openAddForm() { openClassForm(null); }
+function openEditForm(i) { openClassForm(i); }
+
+function openClassForm(editIndex) {
+  const isEdit = editIndex !== null;
+  const c = isEdit ? SCHEDULE[mgmtDay].classes[editIndex] : { hour:"", ampm:"AM", name:"", prof:"", durNum:"50", spots:"10", featured:false };
+  const durNum = isEdit ? (parseInt(c.dur) || 50) : 50;
+  const dayOptions = DAYS.map(function(d){
+    return '<option value="' + d.n + '" ' + (d.n===mgmtDay?'selected':'') + '>' + DAY_NAMES[d.n] + ' ' + d.n + '</option>';
+  }).join('');
+  const box = document.getElementById('modal-box');
+  box.className = 'modal form-modal';
+  box.innerHTML =
+    '<div class="form-title"><i class="ti ' + (isEdit?'ti-pencil':'ti-plus') + '"></i>' + (isEdit?'Editar clase':'Nueva clase') + '</div>' +
+    '<div class="field"><label class="field-label">Día</label><select id="f-day">' + dayOptions + '</select></div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label class="field-label">Hora</label><input id="f-hour" type="text" placeholder="7:00" value="' + c.hour + '"></div>' +
+      '<div class="field" style="max-width:90px;"><label class="field-label">AM/PM</label><select id="f-ampm"><option ' + (c.ampm==="AM"?"selected":"") + '>AM</option><option ' + (c.ampm==="PM"?"selected":"") + '>PM</option></select></div>' +
+    '</div>' +
+    '<div class="field"><label class="field-label">Nombre de la clase</label><input id="f-name" type="text" placeholder="Funcional" value="' + c.name + '"></div>' +
+    '<div class="field"><label class="field-label">Profesor</label><input id="f-prof" type="text" placeholder="Romina" value="' + c.prof + '"></div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label class="field-label">Duración (min)</label><input id="f-dur" type="number" min="10" max="180" value="' + durNum + '"></div>' +
+      '<div class="field"><label class="field-label">Cupos</label><input id="f-spots" type="number" min="0" max="100" value="' + c.spots + '"></div>' +
+    '</div>' +
+    '<label class="field-check"><input id="f-featured" type="checkbox" ' + (c.featured?'checked':'') + '><span>Marcar como "Más popular"</span></label>' +
+    '<div class="form-error" id="f-error"></div>' +
+    '<div class="modal-btns">' +
+      '<button class="modal-btn" onclick="closeModal()">Cancelar</button>' +
+      '<button class="modal-btn primary" id="f-save">' + (isEdit?'Guardar':'Agregar') + '</button>' +
+    '</div>';
+  document.getElementById('f-save').onclick = function(){ saveClass(editIndex); };
+  document.getElementById('modal').classList.add('show');
+}
+
+function saveClass(editIndex) {
+  const isEdit = editIndex !== null;
+  const day = parseInt(document.getElementById('f-day').value);
+  const hour = document.getElementById('f-hour').value.trim();
+  const ampm = document.getElementById('f-ampm').value;
+  const name = document.getElementById('f-name').value.trim();
+  const prof = document.getElementById('f-prof').value.trim();
+  const durNum = document.getElementById('f-dur').value;
+  const spots = parseInt(document.getElementById('f-spots').value);
+  const featured = document.getElementById('f-featured').checked;
+  const err = document.getElementById('f-error');
+
+  /* Validación simple: que no falte lo esencial */
+  if (!hour || !name || !prof) { err.textContent = 'Completá hora, nombre y profesor.'; return; }
+  if (!/^\d{1,2}:\d{2}$/.test(hour)) { err.textContent = 'La hora tiene que ser tipo 7:00 o 18:30.'; return; }
+  if (isNaN(spots) || spots < 0) { err.textContent = 'Los cupos tienen que ser un número válido.'; return; }
+
+  const classObj = { hour:hour, ampm:ampm, name:name, prof:prof, dur:durNum + ' min', spots:spots, featured:featured };
+
+  /* Si marcó "más popular", saco esa marca de las otras clases de ese día */
+  if (featured) { SCHEDULE[day].classes.forEach(function(cl){ cl.featured = false; }); }
+
+  if (isEdit) {
+    /* Si cambió el día, muevo la clase de un día al otro */
+    if (day !== mgmtDay) {
+      SCHEDULE[mgmtDay].classes.splice(editIndex, 1);
+      SCHEDULE[day].classes.push(classObj);
+    } else {
+      SCHEDULE[day].classes[editIndex] = classObj;
+    }
+  } else {
+    SCHEDULE[day].classes.push(classObj);
+  }
+
+  /* Reordeno las clases del día por horario para que queden prolijas */
+  sortDay(day);
+
+  closeModal();
+  mgmtDay = day;
+  renderMgmtDays();
+  renderMgmtList();
+  /* Refresco también la vista del socio: misma fuente de datos */
+  if (selectedDay === day) renderClasses();
+}
+
+/* Convierte "7:00 AM" a minutos para poder ordenar */
+function toMinutes(c) {
+  const parts = c.hour.split(':');
+  let h = parseInt(parts[0]); const m = parseInt(parts[1]);
+  if (c.ampm === 'PM' && h !== 12) h += 12;
+  if (c.ampm === 'AM' && h === 12) h = 0;
+  return h * 60 + m;
+}
+function sortDay(day) {
+  SCHEDULE[day].classes.sort(function(a, b){ return toMinutes(a) - toMinutes(b); });
+}
+
+function askDeleteClass(i) {
+  const c = SCHEDULE[mgmtDay].classes[i];
+  showConfirm({ icon:'cancel', iconClass:'ti-trash', title:'¿Eliminar esta clase?', text:'Se va a borrar de la agenda',
+    cls: c.name + ' · ' + c.hour + ' ' + c.ampm, clsCancel:true, primaryLabel:'Sí, eliminar', primaryClass:'danger', cancelLabel:'Volver',
+    onPrimary:function(){
+      SCHEDULE[mgmtDay].classes.splice(i, 1);
+      closeModal();
+      renderMgmtList();
+      if (selectedDay === mgmtDay) renderClasses();
+    } });
+}
+
+/* ---------- Navegación ---------- */
 function switchView(v) {
   document.querySelectorAll('.view').forEach(function(el) { el.classList.remove('active'); });
   document.getElementById('v-' + v).classList.add('active');
   document.querySelectorAll('.main-nav-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.view === v); });
 }
-renderDays();
-renderClasses();
-renderStudents();
+
+/* ---------- Arranque ---------- */
+renderDays(); renderClasses(); renderStudents(); renderMgmtDays(); renderMgmtList();
 </script>
 </body>
 </html>
